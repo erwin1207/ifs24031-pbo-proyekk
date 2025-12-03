@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  lang="id"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Ganti Icon -->
+    <link rel="icon" th:href="@{/assets/images/logo.png}" type="image/x-icon" />
+
+    <!-- Ganti Judul -->
+    <title layout:title-pattern="$CONTENT_TITLE">Health Tracker</title>
+
+    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-5.3.8-dist/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/assets/vendor/sweetalert2/dist/sweetalert2.min.css}" />
+    <th:block layout:fragment="others-css"></th:block>
+  </head>
+
+  <body class="bg-light">
+    <div layout:fragment="content" class="container-fluid"></div>
+
+    <script th:src="@{/assets/vendor/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/assets/vendor/sweetalert2/dist/sweetalert2.all.min.js}"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const successMessage = "[[${success}]]";
+        if (successMessage && successMessage.length > 2) {
+          Swal.fire({ icon: "success", title: "Berhasil!", text: successMessage, showConfirmButton: true, timer: 3000 });
+        }
+        const errorMessage = "[[${error}]]";
+        if (errorMessage && errorMessage.length > 2) {
+          Swal.fire({ icon: "error", title: "Gagal", text: errorMessage, showConfirmButton: true });
+        }
+      });
+    </script>
+
+    <th:block layout:fragment="others-js"></th:block>
+  </body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout}"
+  lang="id"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Health Tracker</title>
+  </head>
+  <body>
+    <div layout:fragment="content" class="mt-4">
+      
+      <!-- Kartu Dashboard Utama -->
+      <div class="card shadow-sm border-0">
+        
+        <!-- Header: Salam & Logout -->
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+          <div class="d-flex align-items-center gap-3">
+             <!-- Avatar Placeholder -->
+             <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
+                [[${#strings.substring(auth.name,0,1)}]]
+             </div>
+             <div>
+                <small class="text-muted d-block">Selamat Datang,</small>
+                <h5 class="mb-0 fw-bold">[[${auth.name}]]</h5>
+             </div>
+          </div>
+          <div>
+             <a th:href="@{/auth/logout}" class="btn btn-sm btn-outline-danger">
+                <i class="bi bi-box-arrow-right"></i> Keluar
+             </a>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <!-- Judul & Tombol Tambah -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <h4 class="mb-0 text-primary fw-bold">Riwayat Kesehatan</h4>
+              <p class="text-muted small">Pantau perkembangan kondisi tubuhmu setiap hari.</p>
+            </div>
+            <div>
+              <button
+                class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#addRecordModal"
+              >
+                <i class="bi bi-plus-lg"></i> Catatan Baru
+              </button>
+            </div>
+          </div>
+
+          <!-- Tabel Data Kesehatan -->
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>No</th>
+                  <th>Tanggal</th>
+                  <th>Suhu (°C)</th>
+                  <th>Tensi</th>
+                  <th>Jantung (BPM)</th>
+                  <th>Stres (1-10)</th>
+                  <th class="text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Looping Data Records -->
+                <tr th:each="record, status : ${records}">
+                  <td th:text="${status.index + 1}" class="text-muted"></td>
+                  
+                  <!-- Tanggal -->
+                  <td>
+                    <span class="fw-bold" th:text="${#temporals.format(record.date, 'dd MMM yyyy')}"></span>
+                    <br>
+                    <small class="text-muted" th:text="${#temporals.format(record.createdAt, 'HH:mm')}"></small>
+                  </td>
+
+                  <!-- Suhu Tubuh (Warna merah jika demam > 37.5) -->
+                  <td>
+                    <span th:class="${record.bodyTemperature > 37.5} ? 'badge bg-danger' : 'fw-bold text-dark'">
+                        [[${record.bodyTemperature}]]
+                    </span>
+                  </td>
+
+                  <!-- Tensi -->
+                  <td th:text="${record.bloodPressure != null && record.bloodPressure != '' ? record.bloodPressure : '-'}"></td>
+
+                  <!-- Detak Jantung -->
+                  <td th:text="${record.heartRate != null ? record.heartRate : '-'}"></td>
+
+                  <!-- Tingkat Stres (Badge warna-warni) -->
+                  <td>
+                    <span th:if="${record.stressLevel <= 3}" class="badge bg-success">Rendah</span>
+                    <span th:if="${record.stressLevel > 3 && record.stressLevel <= 7}" class="badge bg-warning text-dark">Sedang</span>
+                    <span th:if="${record.stressLevel > 7}" class="badge bg-danger">Tinggi</span>
+                  </td>
+
+                  <!-- Tombol Aksi -->
+                  <td class="text-center">
+                    <div class="btn-group" role="group">
+                        <a th:href="@{/health-records/{id}(id=${record.id})}" class="btn btn-sm btn-outline-info" title="Detail">
+                            ℹ
+                        </a>
+                        
+                        <!-- Tombol Edit: Mengirim banyak parameter ke fungsi JS -->
+                        <button
+                          th:id="|editRecordButton_${record.id}|"
+                          class="btn btn-sm btn-outline-warning"
+                          title="Ubah"
+                          th:attr="onclick=|prepareEditRecord(
+                              '${record.id}', 
+                              '${record.bodyTemperature}', 
+                              '${record.bloodPressure}', 
+                              '${record.heartRate}', 
+                              '${record.stressLevel}', 
+                              '${record.waterIntake}', 
+                              '${record.sleepDuration}', 
+                              '${record.notes != null ? #strings.escapeJava(record.notes) : ''}'
+                          )|"
+                        >
+                            ✏
+                        </button>
+
+                        <button
+                          th:id="|deleteRecordButton_${record.id}|"
+                          class="btn btn-sm btn-outline-danger"
+                          title="Hapus"
+                          th:attr="onclick=|prepareDeleteRecord('${record.id}')|"
+                        >
+                            🗑
+                        </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Jika Data Kosong -->
+                <tr th:if="${#lists.isEmpty(records)}">
+                  <td colspan="7" class="text-center py-5">
+                    <img th:src="@{/assets/images/logo.png}" width="60" class="mb-3 opacity-50 grayscale">
+                    <p class="text-muted">Belum ada catatan kesehatan. Yuk mulai mencatat!</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- INCLUDE MODALS -->
+      <!-- Pastikan kamu punya file fragments/modals.html atau simpan modal code di file yang sesuai -->
+      <!-- Di sini saya asumsikan modal code ada di fragments/modals.html -->
+      <div th:replace="~{fragments/modals :: addRecordModal}"></div>
+      <div th:replace="~{fragments/modals :: editRecordModal}"></div>
+      <div th:replace="~{fragments/modals :: deleteRecordModal}"></div>
+      
+      <!-- JIKA KAMU TIDAK PUNYA FILE fragments/modals.html, 
+           KAMU BISA COPY-PASTE CODE MODAL (ADD/EDIT/DELETE) YANG TADI KITA BUAT LANGSUNG DI SINI -->
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script layout:fragment="others-js">
+      
+      /**
+       * Fungsi untuk mengisi form Edit secara otomatis saat tombol diklik
+       */
+      function prepareEditRecord(id, temp, bp, heart, stress, water, sleep, notes) {
+        // Isi nilai ke dalam input form modal
+        document.getElementById("editRecordId").value = id;
+        document.getElementById("editBodyTemp").value = temp;
+        document.getElementById("editBloodPressure").value = (bp === 'null') ? '' : bp;
+        document.getElementById("editHeartRate").value = (heart === 'null') ? '' : heart;
+        document.getElementById("editStressLevel").value = (stress === 'null') ? '' : stress;
+        document.getElementById("editWaterIntake").value = (water === 'null') ? '' : water;
+        document.getElementById("editSleepDuration").value = (sleep === 'null') ? '' : sleep;
+        document.getElementById("editNotes").value = (notes === 'null') ? '' : notes;
+
+        // Tampilkan Modal
+        var editModal = new bootstrap.Modal(document.getElementById("editRecordModal"));
+        editModal.show();
+      }
+
+      /**
+       * Fungsi untuk modal Hapus
+       */
+      function prepareDeleteRecord(id) {
+        document.getElementById("deleteRecordId").value = id;
+        
+        // Tampilkan Modal
+        var deleteModal = new bootstrap.Modal(document.getElementById("deleteRecordModal"));
+        deleteModal.show();
+      }
+
+      /**
+       * Logic Auto-Open Modal jika ada Error dari Server (Validasi Gagal)
+       */
+      document.addEventListener("DOMContentLoaded", function () {
+        
+        // Cek Modal Tambah
+        var addRecordModalOpen = "[[${addRecordModalOpen}]]" === "true";
+        if (addRecordModalOpen) {
+          new bootstrap.Modal(document.getElementById("addRecordModal")).show();
+        }
+
+        // Cek Modal Edit
+        var editRecordModalOpen = "[[${editRecordModalOpen}]]" === "true";
+        if (editRecordModalOpen) {
+          // Jika edit gagal, kita perlu klik ulang tombol edit agar data terisi kembali
+          // (Atau logic manual pengisian data jika diperlukan)
+          const editModalId = "[[${editRecordModalId}]]";
+          const btn = document.getElementById(`editRecordButton_${editModalId}`);
+          if (btn) btn.click(); 
+        }
+
+        // Cek Modal Delete
+        /* Logic ini jarang dipakai untuk delete karena biasanya langsung hilang, 
+           tapi disediakan untuk jaga-jaga */
+      });
+    </script>
+  </body>
+</html>

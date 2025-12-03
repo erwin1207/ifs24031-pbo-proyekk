@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/base}"
+>
+<!-- Catatan: Pastikan layout:decorate mengarah ke file layout utamamu. 
+     Jika layout ada di root templates, ganti jadi "~{layout}" -->
+
+  <head>
+    <title>Daftar - Health Tracker</title>
+  </head>
+  <body>
+    <div layout:fragment="content" class="mt-5">
+      <form
+        th:action="@{/auth/register/post}"
+        method="post"
+        th:object="${registerForm}"
+      >
+        <div class="card mx-auto" style="max-width: 360px">
+          <div class="card-body">
+            <div>
+              <div class="text-center">
+                <img
+                  th:src="@{/assets/images/logo.png}"
+                  alt="Logo"
+                  width="64"
+                />
+                <hr />
+                <h5>Buat Akun Baru</h5>
+                <span class="text-muted">
+                  Mulai perjalanan hidup sehatmu hari ini
+                </span>
+                <hr />
+              </div>
+
+              <!-- Pesan Error Global -->
+              <div
+                th:if="${#fields.hasGlobalErrors()}"
+                class="alert alert-danger"
+              >
+                <th:block
+                  th:each="err : ${#fields.globalErrors()}"
+                  th:text="${err}"
+                ></th:block>
+              </div>
+
+              <!-- Nama -->
+              <div class="form-group mb-3">
+                <label for="inputName">Nama Lengkap</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputName"
+                  th:field="*{name}"
+                  th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"
+                  placeholder="Nama Kamu"
+                />
+                <div
+                  th:if="${#fields.hasErrors('name')}"
+                  class="invalid-feedback"
+                >
+                  <th:block
+                    th:each="err : ${#fields.errors('name')}"
+                    th:text="${err}"
+                  ></th:block>
+                </div>
+              </div>
+
+              <!-- Alamat Email -->
+              <div class="form-group mb-3">
+                <label for="inputEmail">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="inputEmail"
+                  th:field="*{email}"
+                  th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
+                  placeholder="nama@email.com"
+                />
+                <div
+                  th:if="${#fields.hasErrors('email')}"
+                  class="invalid-feedback"
+                >
+                  <th:block
+                    th:each="err : ${#fields.errors('email')}"
+                    th:text="${err}"
+                  ></th:block>
+                </div>
+              </div>
+
+              <!-- Kata Sandi -->
+              <div class="form-group mb-3">
+                <label for="inputPassword">Kata Sandi</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="inputPassword"
+                  th:field="*{password}"
+                  th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
+                  placeholder="Minimal 8 karakter"
+                />
+                <div
+                  th:if="${#fields.hasErrors('password')}"
+                  class="invalid-feedback"
+                >
+                  <th:block
+                    th:each="err : ${#fields.errors('password')}"
+                    th:text="${err}"
+                  ></th:block>
+                </div>
+              </div>
+
+              <!-- Tombol Daftar -->
+              <div class="form-group mt-3 text-end">
+                <button type="submit" class="btn btn-primary btn-block w-100">
+                  Daftar Sekarang
+                </button>
+              </div>
+
+              <hr />
+              <p class="text-center">
+                Sudah memiliki akun?
+                <a th:href="@{/auth/login}">Masuk di sini</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

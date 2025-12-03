@@ -1,0 +1,58 @@
+spring.application.name=Aplikasi UI SpringBoot
+
+# Datasource
+spring.datasource.url=jdbc:postgresql://localhost:5432/db_pbo_app
+spring.datasource.username=postgres
+spring.datasource.password=Manurung07
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# JPA / Hibernate
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.show-sql=false
+spring.jpa.properties.hibernate.format_sql=false
+spring.jpa.hibernate.ddl-auto=update
+
+# File upload configuration
+spring.servlet.multipart.max-file-size=5MB
+spring.servlet.multipart.max-request-size=5MB
+spring.servlet.multipart.enabled=true
+
+# Upload directory - DEFINE THIS PROPERTY
+app.upload.dir=./uploads
+
+# HikariCP (connection pool)
+spring.datasource.hikari.maximum-pool-size=10
+spring.datasource.hikari.minimum-idle=3
+spring.datasource.hikari.idle-timeout=60000
+spring.datasource.hikari.max-lifetime=1800000
+spring.datasource.hikari.connection-timeout=30000
+
+# DevTools Configuration
+spring.devtools.restart.enabled=true
+spring.devtools.livereload.enabled=true
+spring.devtools.restart.exclude=static/**,public/**
+spring.devtools.restart.additional-exclude=templates/**
+
+# Thymeleaf Cache (disable untuk development)
+spring.thymeleaf.cache=false
+
+# Template reloading
+spring.thymeleaf.prefix=classpath:/templates/
+spring.thymeleaf.suffix=.html
+spring.thymeleaf.mode=HTML
+spring.thymeleaf.encoding=UTF-8
+spring.thymeleaf.servlet.content-type=text/html
+
+# Static resources cache (disable untuk development)
+spring.web.resources.cache.period=0
+spring.web.resources.chain.cache=false
+
+# Logging
+spring.main.banner-mode=off
+logging.level.root=INFO
+logging.level.org.springframework=INFO
+logging.level.org.hibernate=ERROR
+logging.level.org.delcom=INFO
+
+# ANSI Color (opsional)
+spring.output.ansi.enabled=ALWAYS

@@ -1,0 +1,66 @@
+<div th:fragment="editPhotoModal">
+  <!-- Action ke /health-records/edit-photo -->
+  <!-- Object menggunakan 'photoForm' -->
+  <form
+    th:action="@{/health-records/edit-photo}"
+    method="post"
+    th:object="${photoForm}"
+    enctype="multipart/form-data"
+  >
+    <div class="modal fade" id="editPhotoModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Upload Foto Pendukung</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <!-- Hidden ID Record -->
+            <input type="hidden" th:field="*{id}" />
+
+            <div class="mb-3">
+              <label class="form-label">Pilih Foto (Max 5MB)</label>
+              <!-- Input file diarahkan ke field 'photoFile' -->
+              <!-- Added accept attribute untuk memfilter hanya gambar -->
+              <input
+                type="file"
+                class="form-control"
+                th:field="*{photoFile}"
+                id="editPhotoFile"
+                accept="image/png, image/jpeg, image/jpg"
+              />
+              <div class="form-text text-muted">
+                  Contoh: Foto hasil tensi, foto makanan, atau obat.
+              </div>
+
+              <div
+                class="text-danger"
+                th:if="${#fields.hasErrors('photoFile')}"
+                th:errors="*{photoFile}"
+              ></div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+
+            <button type="submit" class="btn btn-primary">
+              Simpan Foto
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

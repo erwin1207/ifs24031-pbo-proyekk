@@ -1,0 +1,122 @@
+<div th:fragment="editRecordModal">
+  <!-- Action ke /health-records/edit -->
+  <!-- Object menggunakan 'recordForm' -->
+  <form th:action="@{/health-records/edit}" method="post" th:object="${recordForm}">
+    <div class="modal fade" id="editRecordModal" tabindex="-1">
+      <div class="modal-dialog modal-lg"> <!-- Menggunakan ukuran besar (Large) -->
+        <div class="modal-content">
+          <div class="modal-header bg-warning text-dark"> <!-- Header warna kuning (Edit) -->
+            <h5 class="modal-title">Ubah Catatan Kesehatan</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            <!-- PENTING: Hidden ID Record -->
+            <input id="editRecordId" type="hidden" th:field="*{id}" />
+
+            <!-- Baris 1: Suhu & Detak Jantung -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="editBodyTemp" class="form-label">Suhu Tubuh (°C)</label>
+                <input
+                  id="editBodyTemp"
+                  type="number"
+                  step="0.1"
+                  class="form-control"
+                  th:field="*{bodyTemperature}"
+                  required
+                />
+                <div class="text-danger" th:if="${#fields.hasErrors('bodyTemperature')}" th:errors="*{bodyTemperature}"></div>
+              </div>
+              
+              <div class="col-md-6">
+                <label for="editHeartRate" class="form-label">Detak Jantung (BPM)</label>
+                <input
+                  id="editHeartRate"
+                  type="number"
+                  class="form-control"
+                  th:field="*{heartRate}"
+                />
+              </div>
+            </div>
+
+            <!-- Baris 2: Tensi & Stres -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="editBloodPressure" class="form-label">Tekanan Darah</label>
+                <input
+                  id="editBloodPressure"
+                  type="text"
+                  class="form-control"
+                  th:field="*{bloodPressure}"
+                />
+              </div>
+
+              <div class="col-md-6">
+                <label for="editStressLevel" class="form-label">Tingkat Stres (1-10)</label>
+                <input
+                  id="editStressLevel"
+                  type="number"
+                  min="1"
+                  max="10"
+                  class="form-control"
+                  th:field="*{stressLevel}"
+                />
+              </div>
+            </div>
+
+            <!-- Baris 3: Minum & Tidur -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="editWaterIntake" class="form-label">Air Minum (Gelas)</label>
+                <input
+                  id="editWaterIntake"
+                  type="number"
+                  class="form-control"
+                  th:field="*{waterIntake}"
+                />
+              </div>
+
+              <div class="col-md-6">
+                <label for="editSleepDuration" class="form-label">Durasi Tidur (Jam)</label>
+                <input
+                  id="editSleepDuration"
+                  type="number"
+                  step="0.1"
+                  class="form-control"
+                  th:field="*{sleepDuration}"
+                />
+              </div>
+            </div>
+
+            <!-- Catatan Tambahan -->
+            <div class="mb-3">
+              <label for="editNotes" class="form-label">Catatan Tambahan</label>
+              <textarea
+                id="editNotes"
+                class="form-control"
+                rows="3"
+                th:field="*{notes}"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

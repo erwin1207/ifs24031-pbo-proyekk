@@ -1,0 +1,124 @@
+<div th:fragment="addRecordModal">
+  <!-- Action mengarah ke /health-records/add sesuai Controller -->
+  <!-- Object menggunakan 'recordForm' sesuai Controller -->
+  <form th:action="@{/health-records/add}" method="post" th:object="${recordForm}">
+    <div class="modal fade" id="addRecordModal" tabindex="-1">
+      <div class="modal-dialog modal-lg"> <!-- modal-lg agar agak lebar -->
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">Catatan Kesehatan Baru</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body">
+            
+            <!-- Baris 1: Suhu & Detak Jantung -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="addBodyTemp" class="form-label">Suhu Tubuh (°C) <span class="text-danger">*</span></label>
+                <input
+                  id="addBodyTemp"
+                  type="number"
+                  step="0.1"
+                  class="form-control"
+                  th:field="*{bodyTemperature}"
+                  placeholder="36.5"
+                  required
+                />
+                <div class="text-danger" th:if="${#fields.hasErrors('bodyTemperature')}" th:errors="*{bodyTemperature}"></div>
+              </div>
+              
+              <div class="col-md-6">
+                <label for="addHeartRate" class="form-label">Detak Jantung (BPM)</label>
+                <input
+                  id="addHeartRate"
+                  type="number"
+                  class="form-control"
+                  th:field="*{heartRate}"
+                  placeholder="80"
+                />
+              </div>
+            </div>
+
+            <!-- Baris 2: Tensi & Stres -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="addBloodPressure" class="form-label">Tekanan Darah</label>
+                <input
+                  id="addBloodPressure"
+                  type="text"
+                  class="form-control"
+                  th:field="*{bloodPressure}"
+                  placeholder="120/80"
+                />
+              </div>
+
+              <div class="col-md-6">
+                <label for="addStressLevel" class="form-label">Tingkat Stres (1-10)</label>
+                <input
+                  id="addStressLevel"
+                  type="number"
+                  min="1"
+                  max="10"
+                  class="form-control"
+                  th:field="*{stressLevel}"
+                />
+              </div>
+            </div>
+
+            <!-- Baris 3: Minum & Tidur -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="addWaterIntake" class="form-label">Air Minum (Gelas)</label>
+                <input
+                  id="addWaterIntake"
+                  type="number"
+                  class="form-control"
+                  th:field="*{waterIntake}"
+                />
+              </div>
+
+              <div class="col-md-6">
+                <label for="addSleepDuration" class="form-label">Durasi Tidur (Jam)</label>
+                <input
+                  id="addSleepDuration"
+                  type="number"
+                  step="0.1"
+                  class="form-control"
+                  th:field="*{sleepDuration}"
+                />
+              </div>
+            </div>
+
+            <!-- Catatan Tambahan -->
+            <div class="mb-3">
+              <label for="addNotes" class="form-label">Catatan Tambahan</label>
+              <textarea
+                id="addNotes"
+                class="form-control"
+                rows="3"
+                th:field="*{notes}"
+                placeholder="Keluhan pusing, habis olahraga, dll..."
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button type="submit" class="btn btn-primary">Simpan Catatan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
