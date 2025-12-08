@@ -1,5 +1,6 @@
 package org.delcom.app.entities;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -12,7 +13,9 @@ import jakarta.persistence.*;
 @Table(name = "users")
 @JsonPropertyOrder({ "id", "name", "email", "createdAt", "updatedAt" })
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class User {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     // ======= Attributes =======
     @Id
@@ -35,7 +38,7 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    // ======= Constructors =======
+    // ======= Constructors ========
 
     public User() {
     }
