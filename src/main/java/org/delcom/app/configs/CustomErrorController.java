@@ -1,13 +1,15 @@
 package org.delcom.app.configs;
 
 import org.springframework.boot.web.error.ErrorAttributeOptions;
-import org.springframework.boot.webmvc.error.ErrorAttributes;
-import org.springframework.boot.webmvc.error.ErrorController;
+// PERBAIKAN: Ubah webmvc menjadi web.servlet
+import org.springframework.boot.web.servlet.error.ErrorAttributes;
+import org.springframework.boot.web.servlet.error.ErrorController;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.context.request.ServletWebRequest; // Pastikan ini ServletWebRequest, bukan WebRequest biasa untuk error controller
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -22,7 +24,10 @@ public class CustomErrorController implements ErrorController {
     }
 
     @RequestMapping("/error")
-    public ResponseEntity<Map<String, Object>> handleError(ServletWebRequest webRequest) {
+    public ResponseEntity<Map<String, Object>> handleError(jakarta.servlet.http.HttpServletRequest request) {
+        // PERBAIKAN: Gunakan ServletWebRequest untuk membungkus request
+        ServletWebRequest webRequest = new ServletWebRequest(request);
+        
         Map<String, Object> attributes = errorAttributes
                 .getErrorAttributes(webRequest, ErrorAttributeOptions.defaults());
 

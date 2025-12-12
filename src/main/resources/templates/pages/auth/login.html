@@ -2,126 +2,200 @@
 <html
   xmlns:th="http://www.thymeleaf.org"
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{layouts/base}" 
+  layout:decorate="~{layouts/base}"
 >
-<!-- Kuncinya ada di "~{layouts/base}" -->
-<!-- Catatan: layout:decorate="~{layout}" mengacu pada file layout.html yang kita buat sebelumnya. 
-     Jika file layoutmu ada di folder 'layouts/base.html', ganti jadi "~{layouts/base}" -->
-
   <head>
-    <!-- Ubah Judul Halaman -->
     <title>Masuk - Health Tracker</title>
+    <!-- Kita tambahkan CSS khusus untuk halaman ini di sini -->
+    <style>
+      /* Background Halaman: Gradient Biru Segar ala Kesehatan */
+      .login-wrapper {
+        background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Styling Kartu Login */
+      .login-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        background-color: #ffffff;
+      }
+
+      /* Animasi Logo */
+      .logo-img {
+        animation: fadeInDown 0.8s ease-out;
+      }
+
+      /* Styling Judul */
+      .login-title {
+        font-weight: 700;
+        color: #333;
+      }
+
+      /* Tombol Custom */
+      .btn-health {
+        background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+        border: none;
+        border-radius: 50px;
+        padding: 10px 20px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+      }
+
+      .btn-health:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);
+        background: linear-gradient(to right, #00f2fe 0%, #4facfe 100%);
+      }
+
+      /* Link Styling */
+      .link-health {
+        color: #4facfe;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .link-health:hover {
+        text-decoration: underline;
+        color: #00f2fe;
+      }
+
+      @keyframes fadeInDown {
+        from { opacity: 0; transform: translate3d(0, -20px, 0); }
+        to { opacity: 1; transform: translate3d(0, 0, 0); }
+      }
+    </style>
   </head>
   <body>
-    <div layout:fragment="content" class="mt-5">
-      <form
-        th:action="@{/auth/login/post}"
-        method="post"
-        th:object="${loginForm}"
-      >
-        <div class="card mx-auto" style="max-width: 360px">
-          <div class="card-body">
-            <div>
-              <div class="text-center">
-                <!-- Logo akan otomatis berubah sesuai file logo.png yang baru -->
-                <img
-                  th:src="@{/assets/images/pngtree-medical-health-logo-image_79631.png.png}"
-                  alt="Logo"
-                  width="64"
-                />
-                <hr />
-                <h5>Masuk</h5>
-                <span class="text-muted">
-                  Pantau kesehatan harianmu dengan mudah
-                </span>
-                <hr />
-              </div>
+    <!-- Bungkus konten dengan wrapper agar background full screen -->
+    <div layout:fragment="content" class="login-wrapper">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-5 col-lg-4">
+            
+            <form
+              th:action="@{/auth/login/post}"
+              method="post"
+              th:object="${loginForm}"
+            >
+              <div class="card login-card p-4">
+                <div class="card-body">
+                  <div class="text-center mb-4">
+                    <!-- Logo -->
+                    <img
+                      th:src="@{/assets/images/pngtree-medical-health-logo-image_79631.png.png}"
+                      alt="Health Logo"
+                      width="80"
+                      class="mb-3 logo-img"
+                    />
+                    <h4 class="login-title">Selamat Datang</h4>
+                    <p class="text-muted small">
+                      Masuk untuk memantau kesehatanmu
+                    </p>
+                  </div>
 
-              <!-- Pesan Error Global -->
-              <div
-                th:if="${#fields.hasGlobalErrors()}"
-                class="alert alert-danger"
-              >
-                <th:block
-                  th:each="err : ${#fields.globalErrors()}"
-                  th:text="${err}"
-                ></th:block>
-              </div>
+                  <!-- Pesan Error Global -->
+                  <div
+                    th:if="${#fields.hasGlobalErrors()}"
+                    class="alert alert-danger alert-dismissible fade show"
+                    role="alert"
+                  >
+                    <th:block
+                      th:each="err : ${#fields.globalErrors()}"
+                      th:text="${err}"
+                    ></th:block>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
 
-              <!-- Alamat Email -->
-              <div class="form-group mb-3">
-                <label for="inputEmail">Email</label>
-                <input
-                  type="email"
-                  class="form-control"
-                  id="inputEmail"
-                  th:field="*{email}"
-                  th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
-                  autocomplete="email"
-                  placeholder="nama@email.com"
-                />
-                <div
-                  th:if="${#fields.hasErrors('email')}"
-                  class="invalid-feedback"
-                >
-                  <th:block
-                    th:each="err : ${#fields.errors('email')}"
-                    th:text="${err}"
-                  ></th:block>
+                  <!-- Alamat Email (Floating Label) -->
+                  <div class="form-floating mb-3">
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="inputEmail"
+                      th:field="*{email}"
+                      th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
+                      autocomplete="email"
+                      placeholder="nama@email.com"
+                    />
+                    <label for="inputEmail" class="text-secondary">Alamat Email</label>
+                    <div
+                      th:if="${#fields.hasErrors('email')}"
+                      class="invalid-feedback"
+                    >
+                      <th:block
+                        th:each="err : ${#fields.errors('email')}"
+                        th:text="${err}"
+                      ></th:block>
+                    </div>
+                  </div>
+
+                  <!-- Kata Sandi (Floating Label) -->
+                  <div class="form-floating mb-3">
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="inputPassword"
+                      th:field="*{password}"
+                      th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
+                      autocomplete="current-password"
+                      placeholder="Kata Sandi"
+                    />
+                    <label for="inputPassword" class="text-secondary">Kata Sandi</label>
+                    <div
+                      th:if="${#fields.hasErrors('password')}"
+                      class="invalid-feedback"
+                    >
+                      <th:block
+                        th:each="err : ${#fields.errors('password')}"
+                        th:text="${err}"
+                      ></th:block>
+                    </div>
+                  </div>
+
+                  <!-- Remember Me & Forgot Password -->
+                  <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="form-check">
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        id="optionRememberMe"
+                        th:field="*{rememberMe}"
+                      />
+                      <label class="form-check-label small text-muted" for="optionRememberMe"
+                        >Ingat saya</label
+                      >
+                    </div>
+                    <!-- Opsional: Jika nanti ada fitur lupa password -->
+                    <!-- <a href="#" class="small link-health">Lupa Sandi?</a> -->
+                  </div>
+
+                  <!-- Tombol Masuk -->
+                  <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-health text-white">
+                      Masuk Aplikasi
+                    </button>
+                  </div>
+
+                  <div class="text-center mt-4">
+                    <p class="small text-muted mb-0">
+                      Belum memiliki akun?
+                      <a th:href="@{/auth/register}" class="link-health">Daftar Sekarang</a>
+                    </p>
+                  </div>
+                  
                 </div>
               </div>
+            </form>
 
-              <!-- Kata Sandi -->
-              <div class="form-group mb-3">
-                <label for="inputPassword">Kata Sandi</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="inputPassword"
-                  th:field="*{password}"
-                  th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
-                  autocomplete="current-password"
-                />
-                <div
-                  th:if="${#fields.hasErrors('password')}"
-                  class="invalid-feedback"
-                >
-                  <th:block
-                    th:each="err : ${#fields.errors('password')}"
-                    th:text="${err}"
-                  ></th:block>
-                </div>
-              </div>
-
-              <!-- Remember Me -->
-              <div class="form-group mb-3 form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="optionRememberMe"
-                  th:field="*{rememberMe}"
-                />
-                <label class="form-check-label" for="optionRememberMe"
-                  >Ingat saya</label
-                >
-              </div>
-
-              <!-- Tombol Masuk -->
-              <div class="form-group mt-3 text-end">
-                <button type="submit" class="btn btn-primary btn-block w-100">
-                  Masuk Aplikasi
-                </button>
-              </div>
-
-              <hr />
-              <p class="text-center">
-                Belum memiliki akun?
-                <a th:href="@{/auth/register}">Daftar Sekarang</a>
-              </p>
-            </div>
           </div>
         </div>
-      </form>
+      </div>
     </div>
   </body>
 </html>
